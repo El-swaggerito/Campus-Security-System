@@ -15,12 +15,12 @@ interface OptimizedAllocationProps {
 export function OptimizedAllocation({ personnel }: OptimizedAllocationProps) {
   // Ensure we have personnel assigned to all the key locations
   const optimizedPersonnel = [
-    { id: 1, name: "John Doe", shift: "day" as const, assignedArea: "Class Area" },
-    { id: 2, name: "Jane Smith", shift: "night" as const, assignedArea: "International M Hostel" },
-    { id: 3, name: "Mike Johnson", shift: "day" as const, assignedArea: "Mosque" },
-    { id: 4, name: "Emily Brown", shift: "night" as const, assignedArea: "Gym" },
-    { id: 5, name: "Chris Lee", shift: "day" as const, assignedArea: "Block of Offices" },
-    { id: 6, name: "Sarah Wilson", shift: "night" as const, assignedArea: "International F Hostel" },
+    { id: 1, name: "Ahmed Hassan", shift: "day" as const, assignedArea: "Class Area" },
+    { id: 2, name: "Fatima Al-Zahra", shift: "night" as const, assignedArea: "International M Hostel" },
+    { id: 3, name: "Omar Abdullah", shift: "day" as const, assignedArea: "Mosque" },
+    { id: 4, name: "Aisha Ibrahim", shift: "night" as const, assignedArea: "Gym" },
+    { id: 5, name: "Yusuf Mahmoud", shift: "day" as const, assignedArea: "Block of Offices" },
+    { id: 6, name: "Khadija Salim", shift: "night" as const, assignedArea: "International F Hostel" },
   ]
 
   return (
