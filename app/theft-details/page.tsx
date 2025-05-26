@@ -32,9 +32,7 @@ export default function TheftDetails() {
           </CardHeader>
           <CardContent>
             <ul className="list-disc pl-5 space-y-2">
-              <li>Campus Square</li>
-              <li>Student Center</li>
-              <li>Sports Complex</li>
+              <li>Class Area</li>
               <li>Lecture Hall</li>
               <li>International M Hostel</li>
               <li>International F Hostel</li>
