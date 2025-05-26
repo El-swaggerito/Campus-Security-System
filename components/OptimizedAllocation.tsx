@@ -15,7 +15,7 @@ interface OptimizedAllocationProps {
 export function OptimizedAllocation({ personnel }: OptimizedAllocationProps) {
   // Ensure we have personnel assigned to all the key locations
   const optimizedPersonnel = [
-    { id: 1, name: "John Doe", shift: "day" as const, assignedArea: "Campus Square" },
+    { id: 1, name: "John Doe", shift: "day" as const, assignedArea: "Class Area" },
     { id: 2, name: "Jane Smith", shift: "night" as const, assignedArea: "International M Hostel" },
     { id: 3, name: "Mike Johnson", shift: "day" as const, assignedArea: "Mosque" },
     { id: 4, name: "Emily Brown", shift: "night" as const, assignedArea: "Gym" },
