@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server"
-import { IncidentService } from "@/lib/services/incident-service"
+import { SupabaseIncidentService } from "@/lib/services/supabase-incident-service"
 
 export async function GET() {
   try {
-    const stats = await IncidentService.getIncidentStats()
+    const stats = await SupabaseIncidentService.getIncidentStats()
 
     return NextResponse.json({
       success: true,

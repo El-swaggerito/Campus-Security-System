@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server"
-import { IncidentService } from "@/lib/services/incident-service"
-import { SecurityService } from "@/lib/services/security-service"
+import { SupabaseIncidentService } from "@/lib/services/supabase-incident-service"
+import { SupabaseSecurityService } from "@/lib/services/supabase-security-service"
 import { analyzeTrends, identifyHotspots, optimizeResourceAllocation } from "@/lib/ml-model"
-import { isValidIncidentType, isValidSeverity } from "@/lib/models/incident"
 
 export async function GET() {
   try {
     const [incidents, securityMeasures, securityPersonnel] = await Promise.all([
-      IncidentService.getAllIncidents(),
-      SecurityService.getSecurityMeasures(),
-      SecurityService.getSecurityPersonnel(),
+      SupabaseIncidentService.getAllIncidents(),
+      SupabaseSecurityService.getSecurityMeasures(),
+      SupabaseSecurityService.getSecurityPersonnel(),
     ])
 
-    // Convert MongoDB documents to the format expected by ML functions
+    // Convert Supabase data to the format expected by ML functions
     const incidentsForAnalysis = incidents.map((incident) => ({
-      id: incident._id?.toString() || "",
-      type: incident.type,
-      date: incident.date.toISOString(),
+      id: incident.id,
+      type: incident.type as "theft",
+      date: incident.date,
       location: incident.location,
       recovered: incident.recovered || false,
     }))
@@ -26,10 +25,10 @@ export async function GET() {
 
     // Convert personnel for optimization
     const personnelForOptimization = securityPersonnel.map((person) => ({
-      id: person._id?.toString() || "",
+      id: person.id,
       name: person.name,
-      shift: person.shift,
-      assignedArea: person.assignedArea,
+      shift: person.shift as "day" | "night",
+      assignedArea: person.assigned_area,
     }))
 
     const optimizedAllocation = optimizeResourceAllocation(hotspots, personnelForOptimization)
@@ -39,7 +38,7 @@ export async function GET() {
       trends,
       hotspots,
       securityMeasures: securityMeasures.map((measure) => ({
-        id: measure._id?.toString() || "",
+        id: measure.id,
         description: measure.description,
       })),
       optimizedAllocation,
@@ -60,36 +59,33 @@ export async function POST(request: Request) {
     }
 
     // Validate incident type
-    if (!isValidIncidentType(body.type)) {
+    const validTypes = ["theft", "vandalism", "fighting", "other"]
+    if (!validTypes.includes(body.type)) {
       return NextResponse.json({ error: "Invalid incident type" }, { status: 400 })
     }
 
     // Validate severity
     const severity = Number.parseInt(body.severity) || 1
-    if (!isValidSeverity(severity)) {
+    if (severity < 1 || severity > 5) {
       return NextResponse.json({ error: "Invalid severity level" }, { status: 400 })
     }
 
     const incidentData = {
       type: body.type,
-      date: new Date(body.date),
+      date: body.date,
       location: body.location,
-      description: body.description || "",
+      description: body.description || null,
       severity,
       recovered: Boolean(body.recovered),
-      reportedBy: body.reportedBy || "System",
+      reported_by: body.reportedBy || "System",
       status: "open" as const,
     }
 
-    const incident = await IncidentService.createIncident(incidentData)
+    const incident = await SupabaseIncidentService.createIncident(incidentData)
 
     return NextResponse.json({
       success: true,
-      incident: {
-        id: incident._id?.toString(),
-        ...incidentData,
-        date: incident.date.toISOString(),
-      },
+      incident,
     })
   } catch (error) {
     console.error("Error creating incident:", error)

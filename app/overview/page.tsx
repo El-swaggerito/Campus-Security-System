@@ -9,6 +9,7 @@ import { AnimatedCard } from "@/components/AnimatedCard"
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingDown, MapPin, Shield, Users, AlertTriangle, CheckCircle } from "lucide-react"
 import { motion } from "framer-motion"
+import { DatabaseStatus } from "@/components/DatabaseStatus"
 
 interface OverviewData {
   incidents: any[]
@@ -94,6 +95,11 @@ export default function Overview() {
             Advanced predictive analytics and real-time monitoring for enhanced campus safety and security management
           </p>
         </motion.div>
+      </div>
+
+      {/* Database Status */}
+      <div className="mb-8">
+        <DatabaseStatus />
       </div>
 
       {/* Stats Cards */}

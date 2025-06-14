@@ -6,27 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "seed": "tsx scripts/seed-database.ts"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/credential-providers": "latest",
     "@emotion/is-prop-valid": "latest",
-    "@mongodb-js/zstd": "latest",
+    "@supabase/supabase-js": "latest",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "latest",
-    "gcp-metadata": "latest",
-    "kerberos": "latest",
     "lucide-react": "^0.454.0",
-    "mongodb": "latest",
-    "mongodb-client-encryption": "latest",
     "next": "14.2.16",
     "react": "^18",
     "react-dom": "^18",
     "recharts": "latest",
-    "snappy": "latest",
-    "socks": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7"
   },
@@ -35,7 +27,6 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "postcss": "^8.5",
-    "tsx": "^4.6.0",
     "typescript": "^5"
   }
 }

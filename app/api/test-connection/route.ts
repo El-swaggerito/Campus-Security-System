@@ -1,30 +1,26 @@
 import { NextResponse } from "next/server"
-import { connectToDatabase } from "@/lib/mongodb"
+import { testSupabaseConnection, checkTableStructure } from "@/lib/test-connection"
 
 export async function GET() {
   try {
-    console.log("Testing MongoDB connection...")
+    console.log("🔍 Testing Supabase connection and database setup...")
 
-    const db = await connectToDatabase()
-
-    // Test the connection by listing collections
-    const collections = await db.listCollections().toArray()
+    const connectionTest = await testSupabaseConnection()
+    const tableStructure = await checkTableStructure()
 
     return NextResponse.json({
-      success: true,
-      message: "MongoDB connection successful!",
-      database: db.databaseName,
-      collections: collections.map((col) => col.name),
+      success: connectionTest.success,
+      connection: connectionTest,
+      tables: tableStructure,
       timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error("MongoDB connection failed:", error)
-
+    console.error("Connection test API error:", error)
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-        timestamp: new Date().toISOString(),
+        error: "Failed to test connection",
+        details: String(error),
       },
       { status: 500 },
     )

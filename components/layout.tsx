@@ -2,7 +2,7 @@
 import Link from "next/link"
 import type React from "react"
 import { useState } from "react"
-import { Menu, X, Shield, BarChart3, AlertTriangle, FileText } from "lucide-react"
+import { Menu, X, Shield, BarChart3, AlertTriangle, FileText, Database } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 
@@ -10,6 +10,7 @@ const menuItems = [
   { href: "/", label: "Overview", icon: BarChart3 },
   { href: "/theft-details", label: "Theft Analysis", icon: AlertTriangle },
   { href: "/recommendations", label: "Recommendations", icon: FileText },
+  { href: "/data-input", label: "Data Input", icon: Database },
 ]
 
 export default function Layout({ children }: { children: React.ReactNode }) {

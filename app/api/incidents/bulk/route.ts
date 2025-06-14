@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
-import { IncidentService } from "@/lib/services/incident-service"
-import { isValidIncidentType, isValidSeverity } from "@/lib/models/incident"
+import { SupabaseIncidentService } from "@/lib/services/supabase-incident-service"
 
 export async function POST(request: Request) {
   try {
@@ -48,7 +47,8 @@ export async function POST(request: Request) {
 
       // Validate and convert data
       try {
-        if (!isValidIncidentType(rowData.type)) {
+        const validTypes = ["theft", "vandalism", "fighting", "other"]
+        if (!validTypes.includes(rowData.type)) {
           errors.push(`Row ${i + 1}: Invalid incident type '${rowData.type}'`)
           continue
         }
@@ -60,19 +60,19 @@ export async function POST(request: Request) {
         }
 
         const severity = Number.parseInt(rowData.severity) || 1
-        if (!isValidSeverity(severity)) {
+        if (severity < 1 || severity > 5) {
           errors.push(`Row ${i + 1}: Invalid severity '${rowData.severity}'`)
           continue
         }
 
         incidents.push({
           type: rowData.type,
-          date,
+          date: rowData.date,
           location: rowData.location,
-          description: rowData.description || "",
+          description: rowData.description || null,
           severity,
           recovered: rowData.recovered === "true" || rowData.recovered === "1",
-          reportedBy: rowData.reportedby || "CSV Import",
+          reported_by: rowData.reportedby || "CSV Import",
           status: "open" as const,
         })
       } catch (error) {
@@ -91,7 +91,7 @@ export async function POST(request: Request) {
     }
 
     // Bulk insert incidents
-    const insertedCount = await IncidentService.bulkCreateIncidents(incidents)
+    const insertedCount = await SupabaseIncidentService.bulkCreateIncidents(incidents)
 
     return NextResponse.json({
       success: true,
