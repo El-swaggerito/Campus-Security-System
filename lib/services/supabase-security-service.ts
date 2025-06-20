@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import type { Database, SecurityMeasure, SecurityPersonnel } from "@/lib/supabase"
 
 type SecurityMeasureInsert = Database["public"]["Tables"]["security_measures"]["Insert"]
@@ -8,6 +8,7 @@ type SecurityPersonnelUpdate = Database["public"]["Tables"]["security_personnel"
 export class SupabaseSecurityService {
   // Security Measures
   static async getSecurityMeasures(): Promise<SecurityMeasure[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("security_measures")
       .select("*")
@@ -23,6 +24,7 @@ export class SupabaseSecurityService {
   }
 
   static async createSecurityMeasure(measureData: SecurityMeasureInsert): Promise<SecurityMeasure | null> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("security_measures").insert(measureData).select().single()
 
     if (error) {
@@ -35,6 +37,7 @@ export class SupabaseSecurityService {
 
   // Security Personnel
   static async getSecurityPersonnel(): Promise<SecurityPersonnel[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("security_personnel")
       .select("*")
@@ -50,6 +53,7 @@ export class SupabaseSecurityService {
   }
 
   static async createSecurityPersonnel(personnelData: SecurityPersonnelInsert): Promise<SecurityPersonnel | null> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("security_personnel").insert(personnelData).select().single()
 
     if (error) {
@@ -61,6 +65,7 @@ export class SupabaseSecurityService {
   }
 
   static async updatePersonnelAssignment(id: number, assignedArea: string): Promise<SecurityPersonnel | null> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("security_personnel")
       .update({ assigned_area: assignedArea })

@@ -1,10 +1,11 @@
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 
 export async function testSupabaseConnection() {
   try {
     console.log("Testing Supabase connection...")
 
     // Test basic connection
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("incidents").select("count", { count: "exact", head: true })
 
     if (error) {
@@ -26,6 +27,7 @@ export async function checkTableStructure() {
   try {
     console.log("Checking table structure...")
 
+    const supabase = getSupabaseClient()
     // Check if tables exist by trying to query them
     const tables = ["incidents", "security_measures", "security_personnel"]
     const results = []

@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase"
+import { getSupabaseClient } from "@/lib/supabase"
 import type { Database, Incident } from "@/lib/supabase"
 
 type IncidentInsert = Database["public"]["Tables"]["incidents"]["Insert"]
@@ -7,6 +7,7 @@ type IncidentUpdate = Database["public"]["Tables"]["incidents"]["Update"]
 export class SupabaseIncidentService {
   // Create a new incident
   static async createIncident(incidentData: IncidentInsert): Promise<Incident | null> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("incidents").insert(incidentData).select().single()
 
     if (error) {
@@ -19,6 +20,7 @@ export class SupabaseIncidentService {
 
   // Get all incidents
   static async getAllIncidents(): Promise<Incident[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("incidents").select("*").order("date", { ascending: false })
 
     if (error) {
@@ -31,6 +33,7 @@ export class SupabaseIncidentService {
 
   // Get incidents by date range
   static async getIncidentsByDateRange(startDate: string, endDate: string): Promise<Incident[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("incidents")
       .select("*")
@@ -48,6 +51,7 @@ export class SupabaseIncidentService {
 
   // Get incidents by location
   static async getIncidentsByLocation(location: string): Promise<Incident[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("incidents")
       .select("*")
@@ -64,6 +68,7 @@ export class SupabaseIncidentService {
 
   // Get incidents by type
   static async getIncidentsByType(type: string): Promise<Incident[]> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase
       .from("incidents")
       .select("*")
@@ -80,6 +85,7 @@ export class SupabaseIncidentService {
 
   // Update incident
   static async updateIncident(id: number, updateData: IncidentUpdate): Promise<Incident | null> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("incidents").update(updateData).eq("id", id).select().single()
 
     if (error) {
@@ -92,6 +98,7 @@ export class SupabaseIncidentService {
 
   // Delete incident
   static async deleteIncident(id: number): Promise<boolean> {
+    const supabase = getSupabaseClient()
     const { error } = await supabase.from("incidents").delete().eq("id", id)
 
     if (error) {
@@ -104,6 +111,8 @@ export class SupabaseIncidentService {
 
   // Get incident statistics
   static async getIncidentStats() {
+    const supabase = getSupabaseClient()
+
     // Get total count
     const { count: totalCount } = await supabase.from("incidents").select("*", { count: "exact", head: true })
 
@@ -162,6 +171,7 @@ export class SupabaseIncidentService {
 
   // Bulk insert incidents (for CSV import)
   static async bulkCreateIncidents(incidents: IncidentInsert[]): Promise<number> {
+    const supabase = getSupabaseClient()
     const { data, error } = await supabase.from("incidents").insert(incidents).select()
 
     if (error) {

@@ -1,18 +1,30 @@
 import { createClient } from "@supabase/supabase-js"
 
-// Validate environment variables
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+// Get environment variables with fallbacks for build time
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
-if (!supabaseUrl) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL environment variable")
+// Only validate in runtime, not during build
+let supabase: ReturnType<typeof createClient> | null = null
+
+export function getSupabaseClient() {
+  if (!supabase) {
+    if (!supabaseUrl) {
+      throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL environment variable")
+    }
+
+    if (!supabaseAnonKey) {
+      throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable")
+    }
+
+    supabase = createClient(supabaseUrl, supabaseAnonKey)
+  }
+
+  return supabase
 }
 
-if (!supabaseAnonKey) {
-  throw new Error("Missing NEXT_PUBLIC_SUPABASE_ANON_KEY environment variable")
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Export a getter function instead of direct client
+export { getSupabaseClient as supabase }
 
 // Database types
 export interface Database {
